@@ -54,7 +54,7 @@ def calc_trans_matrix(seq_set):
     trans_matrix["C"] = {}
     trans_matrix["T"] = {}
     trans_matrix["G"] = {}
-    for k, v in trans_matrix.iteritems():
+    for k, v in list(trans_matrix.items()):
         v["A"] = 0
         v["C"] = 0
         v["T"] = 0
@@ -66,7 +66,7 @@ def calc_trans_matrix(seq_set):
             trans_matrix[seq[i-1]][seq[i]] += 1
 
     # divide each component by the total for that row
-    for k,v in trans_matrix.iteritems():
+    for k,v in list(trans_matrix.items()):
         total = v["A"] + v["G"] + v["T"] + v["C"]
         v["A"] /= float(total)
         v["C"] /= float(total)
@@ -152,7 +152,7 @@ def Main():
     for record in SeqIO.parse(f, "fasta"):
         test_seqs[record.id] = calc_log_odds_ratio(str(record.seq), pos_matrix, neg_matrix)
     
-    for k,v in test_seqs.iteritems():
+    for k,v in list(test_seqs.items()):
         prstr = k + " is probably "
         if v < 0:
             prstr += "not "
