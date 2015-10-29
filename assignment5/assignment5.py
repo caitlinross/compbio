@@ -27,25 +27,18 @@ def consensusSeq(alignment):
     return con_seq
     
 def mutualInformation(alignment):
-    matrix = []
-    counts = []
-    for i in range(5):
-        counts.append([])
-        for j in range(len(alignment[0])):
-            counts[i].append(0)
+    matrix = [[0 for j in range(len(alignment[0]))] for i in range(len(alignment[0]))]
+    counts = [[0 for j in range(len(alignment[0]))] for i in range(5)]
+    
     # get the counts of each base in each column
     for i in range(len(alignment[0])):
-        matrix.append([])
         for j in range(len(alignment[0])):
-            matrix[i].append(0)
             counts[alphabet[alignment[i][j]]][j] += 1
     
     # calc frequencies of the bases in each column        
     for i in range(len(counts)):
-        #print(counts[i])
         for j in range(len(counts[i])):
             counts[i][j] /= len(alignment)
-        #print(counts[i])
         
     # this is probably wrong
     # calc mutual information matrix from frequencies
@@ -76,6 +69,25 @@ def mutualInformation(alignment):
 #                print(str(test1[i][j]) + " " + str(test2[i][j]))
               
     return matrix
+    
+def secondaryStructure(mI):
+    D = [[0 for j in range(len(mI))] for i in range(len(mI))]
+    for i in range(len(mI)):
+        for j in range(i+2, len(mI)-1):
+            tmp = [0, 0, 0, 0]
+            tmp[0] = D[i+1][j]
+            tmp[1] = D[i][j-1]
+            tmp[2] = D[i+1][j-1] + mI[i][j]
+            maxtmp = 0
+            for k in range(i+1,j):
+                t = D[i][k]+D[k+1][j]
+                if t > maxtmp:
+                    maxtmp = t
+            tmp[3] = maxtmp
+            D[i][j] = max(tmp)
+            
+    print(D)
+    
 
 def Main():
     global alphabet, rev_alph
@@ -94,6 +106,8 @@ def Main():
     miMatrix = mutualInformation(alignment)
     print("Mutual Information matrix")
     print(miMatrix)
+    
+    secondaryStructure(miMatrix)
 
 if __name__ == '__main__':
     Main()
