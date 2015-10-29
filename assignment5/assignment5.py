@@ -86,8 +86,70 @@ def secondaryStructure(mI):
             tmp[3] = maxtmp
             D[i][j] = max(tmp)
             
-    print(D)
     
+def BackTrace(g, seq):
+    """
+    BackTrace - backtrace throug Nussinov matrix
+    g - matrix returned by Nussinov
+    seq - sequence string
+    return
+    pairs - pairs array; i, i+1 base paired
+    M - numpy pairs array M[i,j] == 1 if i and j base paired
+    """
+    
+    def traceback(i, j):
+        """
+        traceback - recursive back trace through g matrix
+                    fills pairs matrix defined in outer scope
+        """
+        nonlocal pairs
+        
+        if i < j:
+            if g[i,j] == g[i+1, j]:
+                traceback(i+1, j)
+            elif g[i,j] == g[i, j-1]:
+                traceback(i, j-1)
+            elif g[i,j] == g[i+1, j-1] + delta(seq[i], seq[j]):
+                if abs(i-j) > 2:
+                    pairs += [i,j]
+                traceback(i+1, j-1)
+            else:
+                for k in range(i+1, j):
+                    if g[i,j] == g[i, k] + g[k+1, j]:
+                        traceback(i, k)
+                        traceback(k+1, j)
+                        break
+    
+    L = g.shape[0]
+    pairs = []
+    traceback(0, L-1)
+
+    M = np.zeros([L, L], dtype =int)
+    for i in range(0, len(pairs), 2):
+        M[pairs[i], pairs[i+1]] = 1
+
+    return pairs, M
+    
+def delta(si, sj):
+    """
+    delta - score base pairs for Nussinov algorithm
+    si, si - nucleotide letters
+    return
+    d - delta score 1 for complement or G-U wobble pair, otherwise 0
+        1 indicates possible base pairng
+    """
+    
+    nt2int = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'U': 3}
+    nt2comp = {'A': 3, 'C': 2, 'G': 1, 'T': 0, 'U': 0}
+
+    d = 0
+    if (si != '-' and sj != '-'):
+        if nt2int[si] == nt2comp[sj]:
+            d = 1
+        elif (si == 'G' and sj == 'U') or (si == 'U' and sj == 'G'):
+            d = 1
+
+    return d
 
 def Main():
     global alphabet, rev_alph
@@ -108,6 +170,10 @@ def Main():
     print(miMatrix)
     
     secondaryStructure(miMatrix)
+    
+    pairs, M = BackTrace(np.array(miMatrix), con_seq)
+    print(pairs)
+    print(M)
 
 if __name__ == '__main__':
     Main()
