@@ -7,6 +7,7 @@
 
 import sys
 import random
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 from Bio import AlignIO
@@ -32,12 +33,14 @@ def mutualInformation(alignment):
         counts.append([])
         for j in range(len(alignment[0])):
             counts[i].append(0)
+    # get the counts of each base in each column
     for i in range(len(alignment[0])):
         matrix.append([])
         for j in range(len(alignment[0])):
             matrix[i].append(0)
             counts[alphabet[alignment[i][j]]][j] += 1
-            
+    
+    # calc frequencies of the bases in each column        
     for i in range(len(counts)):
         #print(counts[i])
         for j in range(len(counts[i])):
@@ -45,6 +48,7 @@ def mutualInformation(alignment):
         #print(counts[i])
         
     # this is probably wrong
+    # calc mutual information matrix from frequencies
     for row in range(len(alignment[0])):
         for col in range(len(alignment[0])):
             total = 0
@@ -52,12 +56,25 @@ def mutualInformation(alignment):
                 for j in range(len(counts)):
                     dinuc = rev_alph[i]+rev_alph[j]
                     if dinuc in ('AU', 'UA', 'CG', 'GC', 'GU', 'UG'):
-                        total += ((counts[alphabet[dinuc[0]]][i]+counts[alphabet[dinuc[1]]][j]))
-                        
-                            
-                        
-                
+                        fib = counts[alphabet[dinuc[0]]][row]
+                        fjb = counts[alphabet[dinuc[1]]][col]
+                        if fib != 0 and fjb != 0:
+                            total += (fib+fjb) * math.log((fib+fjb)/(fib*fjb))
             
+            if total < 0:
+                matrix[row][col] = 0
+            else:                
+                matrix[row][col] = total
+                             
+#    # check that it's symmetric
+#    test1 = np.array(matrix)
+#    test2 = test1.T
+#    check = test1 == test2
+#    for i in range(len(check)):
+#        for j in range(len(check[i])):
+#            if check[i][j] == False:
+#                print(str(test1[i][j]) + " " + str(test2[i][j]))
+              
     return matrix
 
 def Main():
