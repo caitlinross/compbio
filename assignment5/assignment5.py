@@ -40,7 +40,6 @@ def mutualInformation(alignment):
         for j in range(len(counts[i])):
             counts[i][j] /= len(alignment)
         
-    # this is probably wrong
     # calc mutual information matrix from frequencies
     for row in range(len(alignment[0])):
         for col in range(len(alignment[0])):
@@ -52,7 +51,7 @@ def mutualInformation(alignment):
                         fib = counts[alphabet[dinuc[0]]][row]
                         fjb = counts[alphabet[dinuc[1]]][col]
                         if fib != 0 and fjb != 0:
-                            total += (fib+fjb) * math.log((fib+fjb)/(fib*fjb))
+                            total += (fib+fjb) * math.log((fib+fjb)/(fib*fjb), 2)
             
             if total < 0:
                 matrix[row][col] = 0
@@ -73,7 +72,7 @@ def mutualInformation(alignment):
 def secondaryStructure(mI):
     D = [[0 for j in range(len(mI))] for i in range(len(mI))]
     for i in range(len(mI)):
-        for j in range(i+2, len(mI)-1):
+        for j in range(i+2, len(mI)):
             tmp = [0, 0, 0, 0]
             tmp[0] = D[i+1][j]
             tmp[1] = D[i][j-1]
@@ -85,9 +84,10 @@ def secondaryStructure(mI):
                     maxtmp = t
             tmp[3] = maxtmp
             D[i][j] = max(tmp)
+    return D
             
     
-def BackTrace(g, seq):
+def BackTrace(g, seq, mI):
     """
     BackTrace - backtrace throug Nussinov matrix
     g - matrix returned by Nussinov
@@ -109,7 +109,8 @@ def BackTrace(g, seq):
                 traceback(i+1, j)
             elif g[i,j] == g[i, j-1]:
                 traceback(i, j-1)
-            elif g[i,j] == g[i+1, j-1] + delta(seq[i], seq[j]):
+            #elif g[i,j] == g[i+1, j-1] + delta(seq[i], seq[j]):
+            elif g[i,j] == g[i+1, j-1] + mI[i][j]:
                 if abs(i-j) > 2:
                     pairs += [i,j]
                 traceback(i+1, j-1)
@@ -166,12 +167,15 @@ def Main():
     print("consensus sequence: " + con_seq)
     
     miMatrix = mutualInformation(alignment)
-    print("Mutual Information matrix")
-    print(miMatrix)
+    #print("Mutual Information matrix")
+    #print(miMatrix)
+   
+    D = secondaryStructure(miMatrix)
+    #p.set_printoptions(threshold='nan')
+    #print("\n\n\n\nD matrix")
+    #print(D)
     
-    secondaryStructure(miMatrix)
-    
-    pairs, M = BackTrace(np.array(miMatrix), con_seq)
+    pairs, M = BackTrace(np.array(D), con_seq, miMatrix)
     print(pairs)
     print(M)
 
