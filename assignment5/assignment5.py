@@ -31,32 +31,50 @@ def mutualInformation(alignment):
     counts = [[0 for j in range(len(alignment[0]))] for i in range(5)]
     
     # get the counts of each base in each column
-    for i in range(len(alignment[0])):
-        for j in range(len(alignment[0])):
+    for i in range(len(alignment)):
+        for j in range(len(alignment[i])):
             counts[alphabet[alignment[i][j]]][j] += 1
     
-    # calc frequencies of the bases in each column        
-    for i in range(len(counts)):
-        for j in range(len(counts[i])):
-            counts[i][j] /= len(alignment)
+    # calc frequencies of the bases in each column 
+    freq = [0 for j in range(len(alignment[0]))] for i in range(4)]  
+    for j in range(len(counts[0])):
+        total = 0
+        for i in range(len(counts)):
+            if i != 4:
+                total += counts[i][j]
+        for i in range(len(counts)):
+            freq[i][j] = counts[i][j] / total
+    
+    joint = {}
+    joint["A"] = {}
+    joint["G"] = {}
+    joint["C"] = {}
+    joint["U"] = {}
+    for k, v in list(joint.items()):
+        v["A"] = 0
+        v["G"] = 0
+        v["C"] = 0
+        v["U"] = 0
+    for j in range(len(counts[0])):
         
     # calc mutual information matrix from frequencies
-    for row in range(len(alignment[0])):
-        for col in range(len(alignment[0])):
+    for i in range(len(alignment[0])):
+        for j in range(len(alignment[0])):
             total = 0
-            for i in range(len(counts)):
-                for j in range(len(counts)):
-                    dinuc = rev_alph[i]+rev_alph[j]
+            for b in range(len(freq)):
+                for bp in range(len(freq)):
+                    dinuc = rev_alph[b]+rev_alph[bp]
+                    joint
                     if dinuc in ('AU', 'UA', 'CG', 'GC', 'GU', 'UG'):
-                        fib = counts[alphabet[dinuc[0]]][row]
-                        fjb = counts[alphabet[dinuc[1]]][col]
+                        fib = freq[alphabet[dinuc[0]]][i]
+                        fjb = freq[alphabet[dinuc[1]]][j]
                         if fib != 0 and fjb != 0:
                             total += (fib+fjb) * math.log((fib+fjb)/(fib*fjb), 2)
             
             if total < 0:
-                matrix[row][col] = 0
+                matrix[i][j] = 0
             else:                
-                matrix[row][col] = total
+                matrix[i][j] = total
                              
 #    # check that it's symmetric
 #    test1 = np.array(matrix)
@@ -169,7 +187,7 @@ def Main():
     miMatrix = mutualInformation(alignment)
     #print("Mutual Information matrix")
     #print(miMatrix)
-   
+    m = np.array(miMatrix)
     D = secondaryStructure(miMatrix)
     #p.set_printoptions(threshold='nan')
     #print("\n\n\n\nD matrix")
