@@ -5,8 +5,6 @@
 # Assignment 5
 #################################
 
-import sys
-import random
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -85,47 +83,32 @@ def mutualInformation(alignment):
                     if dinuc in ('AU', 'UA', 'CG', 'GC', 'GU', 'UG'):
                         fib = freq[alphabet[dinuc[0]]][i]
                         fjb = freq[alphabet[dinuc[1]]][j]
-                        
-                        
-                        # find joint frequency
-                        #for s in range(len())
                         if fib != 0 and fjb != 0 and joint[dinuc[0]][dinuc[1]] != 0:
-                            #print(joint[dinuc[0]][dinuc[1]] * math.log(joint[dinuc[0]][dinuc[1]]/(fib*fjb), 2))
                             tot += joint[dinuc[0]][dinuc[1]] * math.log(joint[dinuc[0]][dinuc[1]]/(fib*fjb), 2)
             
             if tot < 0:
                 matrix[i][j] = 0
-                #matrix[j][i] = 0
             else:                
                 matrix[i][j] = tot
-                #matrix[j][i] = tot
-                             
-#    # check that it's symmetric
-#    test1 = np.array(matrix)
-#    test2 = test1.T
-#    check = test1 == test2
-#    for i in range(len(check)):
-#        for j in range(len(check[i])):
-#            if check[i][j] == False:
-#                print(str(test1[i][j]) + " " + str(test2[i][j]))
               
     return matrix
     
 def secondaryStructure(mI):
     D = [[0 for j in range(len(mI))] for i in range(len(mI))]
     for i in range(len(mI)):
-        for j in range(i+2, len(mI)):
-            tmp = [0, 0, 0, 0]
-            tmp[0] = D[i+1][j]
-            tmp[1] = D[i][j-1]
-            tmp[2] = D[i+1][j-1] + mI[i][j]
-            maxtmp = 0
-            for k in range(i+1,j):
-                t = D[i][k]+D[k+1][j]
-                if t > maxtmp:
-                    maxtmp = t
-            tmp[3] = maxtmp
-            D[i][j] = max(tmp)
+        for j in range(i, len(mI)):
+            if abs(i-j) >= 2:
+                tmp = [0, 0, 0, 0]
+                tmp[0] = D[i+1][j]
+                tmp[1] = D[i][j-1]
+                tmp[2] = D[i+1][j-1] + mI[i][j]
+                maxtmp = 0
+                for k in range(i+1,j):
+                    t = D[i][k]+D[k+1][j]
+                    if t > maxtmp:
+                        maxtmp = t
+                tmp[3] = maxtmp
+                D[i][j] = max(tmp)
     return D
             
     
@@ -193,6 +176,14 @@ def delta(si, sj):
             d = 1
 
     return d
+    
+def StructureFromPairs(pairs, L):
+    struct = list('.' * L)
+    for i in range(0, len(pairs), 2):
+        struct[pairs[i]] = '('
+        struct[pairs[i+1]] = ')'
+        
+    return ''.join(struct)
 
 def Main():
     global alphabet, rev_alph
@@ -211,8 +202,9 @@ def Main():
     miMatrix = mutualInformation(alignment)
     #print("Mutual Information matrix")
     #print(miMatrix)
-    m = np.array(miMatrix)
+    #m = np.array(miMatrix)
     D = secondaryStructure(miMatrix)
+    d = np.array(D)
     #p.set_printoptions(threshold='nan')
     #print("\n\n\n\nD matrix")
     #print(D)
@@ -220,6 +212,9 @@ def Main():
     pairs, M = BackTrace(np.array(D), con_seq, miMatrix)
     print(pairs)
     print(M)
+    
+    struct = StructureFromPairs(pairs, len(alignment[0]))
+    print("structure: " + struct)
 
 if __name__ == '__main__':
     Main()
