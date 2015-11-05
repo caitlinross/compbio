@@ -36,13 +36,13 @@ def mutualInformation(alignment):
             counts[alphabet[alignment[i][j]]][j] += 1
     
     # calc frequencies of the bases in each column 
-    freq = [0 for j in range(len(alignment[0]))] for i in range(4)]  
+    freq = [[0 for j in range(len(alignment[0]))] for i in range(4)]  
     for j in range(len(counts[0])):
         total = 0
         for i in range(len(counts)):
             if i != 4:
                 total += counts[i][j]
-        for i in range(len(counts)):
+        for i in range(len(freq)):
             freq[i][j] = counts[i][j] / total
     
     joint = {}
@@ -51,11 +51,14 @@ def mutualInformation(alignment):
     joint["C"] = {}
     joint["U"] = {}
     for k, v in list(joint.items()):
-        v["A"] = 0
+        v["A"] = 0 
         v["G"] = 0
         v["C"] = 0
         v["U"] = 0
-    for j in range(len(counts[0])):
+   # for i in range(len(counts[0])):
+    #    for b in range(len(freq)):
+     #       for bp in range(len(freq)):
+                
         
     # calc mutual information matrix from frequencies
     for i in range(len(alignment[0])):
@@ -64,10 +67,16 @@ def mutualInformation(alignment):
             for b in range(len(freq)):
                 for bp in range(len(freq)):
                     dinuc = rev_alph[b]+rev_alph[bp]
-                    joint
+                    
+            for b in range(len(freq)):
+                for bp in range(len(freq)):                    
                     if dinuc in ('AU', 'UA', 'CG', 'GC', 'GU', 'UG'):
                         fib = freq[alphabet[dinuc[0]]][i]
                         fjb = freq[alphabet[dinuc[1]]][j]
+                        joint = 0
+                        total = 0
+                        # find joint frequency
+                        #for s in range(len())
                         if fib != 0 and fjb != 0:
                             total += (fib+fjb) * math.log((fib+fjb)/(fib*fjb), 2)
             
