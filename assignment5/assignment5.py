@@ -45,45 +45,60 @@ def mutualInformation(alignment):
         for i in range(len(freq)):
             freq[i][j] = counts[i][j] / total
     
-    joint = {}
-    joint["A"] = {}
-    joint["G"] = {}
-    joint["C"] = {}
-    joint["U"] = {}
-    for k, v in list(joint.items()):
-        v["A"] = 0 
-        v["G"] = 0
-        v["C"] = 0
-        v["U"] = 0
-   # for i in range(len(counts[0])):
-    #    for b in range(len(freq)):
-     #       for bp in range(len(freq)):
-                
+                    
         
     # calc mutual information matrix from frequencies
     for i in range(len(alignment[0])):
         for j in range(len(alignment[0])):
+            joint = {}
+            joint["A"] = {}
+            joint["G"] = {}
+            joint["C"] = {}
+            joint["U"] = {}
+            for k, v in list(joint.items()):
+                joint[k]["A"] = 0 
+                joint[k]["G"] = 0
+                joint[k]["C"] = 0
+                joint[k]["U"] = 0
             total = 0
+            # get counts for this i, j pair            
+            if i != j:            
+                for k in range(len(alignment)):
+                    dinuc = alignment[k][i] + alignment[k][j]
+                    if alignment[k][i] != '-' and alignment[k][j] != '-':
+                        joint[alignment[k][i]][alignment[k][j]] += 1
+                        total += 1
+            # calculate frequences for this i, j pair
+            if i != j:
+                for k1, v1 in list(joint.items()):
+                    for k2, v2 in list(v1.items()):
+                        joint[k1][k2] /= len(alignment[0])
+                        #if total != 0:
+                         #   joint[k1][k2] /= total
+           
+            # calculate i,jth value for mutual information 
+            tot = 0.0
+            #if j >= i:
             for b in range(len(freq)):
-                for bp in range(len(freq)):
+                for bp in range(len(freq)):   
                     dinuc = rev_alph[b]+rev_alph[bp]
-                    
-            for b in range(len(freq)):
-                for bp in range(len(freq)):                    
                     if dinuc in ('AU', 'UA', 'CG', 'GC', 'GU', 'UG'):
                         fib = freq[alphabet[dinuc[0]]][i]
                         fjb = freq[alphabet[dinuc[1]]][j]
-                        joint = 0
-                        total = 0
+                        
+                        
                         # find joint frequency
                         #for s in range(len())
-                        if fib != 0 and fjb != 0:
-                            total += (fib+fjb) * math.log((fib+fjb)/(fib*fjb), 2)
+                        if fib != 0 and fjb != 0 and joint[dinuc[0]][dinuc[1]] != 0:
+                            #print(joint[dinuc[0]][dinuc[1]] * math.log(joint[dinuc[0]][dinuc[1]]/(fib*fjb), 2))
+                            tot += joint[dinuc[0]][dinuc[1]] * math.log(joint[dinuc[0]][dinuc[1]]/(fib*fjb), 2)
             
-            if total < 0:
+            if tot < 0:
                 matrix[i][j] = 0
+                #matrix[j][i] = 0
             else:                
-                matrix[i][j] = total
+                matrix[i][j] = tot
+                #matrix[j][i] = tot
                              
 #    # check that it's symmetric
 #    test1 = np.array(matrix)
