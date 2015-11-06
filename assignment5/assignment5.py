@@ -7,9 +7,10 @@
 
 import math
 import numpy as np
-import matplotlib.pyplot as plt
 from Bio import AlignIO
 
+# returns the consensus sequence from all of the alignment sequences
+# alignment is the list of the alignments
 def consensusSeq(alignment):
     con_seq = ""
     for j in range(len(alignment[0])):
@@ -24,6 +25,8 @@ def consensusSeq(alignment):
         con_seq += max(counts, key=lambda k: counts[k])
     return con_seq
     
+# calculates the mutual information matrix based on the sums of frequencies of base pairs
+# takes in the list of alignments
 def mutualInformation(alignment):
     matrix = [[0 for j in range(len(alignment[0]))] for i in range(len(alignment[0]))]
     counts = [[0 for j in range(len(alignment[0]))] for i in range(5)]
@@ -42,8 +45,6 @@ def mutualInformation(alignment):
                 total += counts[i][j]
         for i in range(len(freq)):
             freq[i][j] = counts[i][j] / total
-    
-                    
         
     # calc mutual information matrix from frequencies
     for i in range(len(alignment[0])):
@@ -71,9 +72,7 @@ def mutualInformation(alignment):
                 for k1, v1 in list(joint.items()):
                     for k2, v2 in list(v1.items()):
                         joint[k1][k2] /= len(alignment[0])
-                        #if total != 0:
-                         #   joint[k1][k2] /= total
-           
+                        
             # calculate i,jth value for mutual information 
             tot = 0.0
             #if j >= i:
@@ -86,6 +85,7 @@ def mutualInformation(alignment):
                         if fib != 0 and fjb != 0 and joint[dinuc[0]][dinuc[1]] != 0:
                             tot += joint[dinuc[0]][dinuc[1]] * math.log(joint[dinuc[0]][dinuc[1]]/(fib*fjb), 2)
             
+            # put the summed value in the appropriate matrix position
             if tot < 0:
                 matrix[i][j] = 0
             else:                
@@ -93,25 +93,27 @@ def mutualInformation(alignment):
               
     return matrix
     
-def secondaryStructure(mI):
+# takes in the mutual information matrix to calculate the maximum mutual 
+# information secondary structure
+def maxMI(mI):
     D = [[0 for j in range(len(mI))] for i in range(len(mI))]
-    for i in range(len(mI)):
-        for j in range(i, len(mI)):
-            if abs(i-j) >= 2:
-                tmp = [0, 0, 0, 0]
-                tmp[0] = D[i+1][j]
-                tmp[1] = D[i][j-1]
-                tmp[2] = D[i+1][j-1] + mI[i][j]
-                maxtmp = 0
-                for k in range(i+1,j):
-                    t = D[i][k]+D[k+1][j]
-                    if t > maxtmp:
-                        maxtmp = t
-                tmp[3] = maxtmp
-                D[i][j] = max(tmp)
+    for i in range(len(mI)-1,-1,-1):
+        for j in range(i+3, len(mI)):
+            #if abs(i-j) > 2:
+            tmp = [0, 0, 0, 0]
+            tmp[0] = D[i+1][j]
+            tmp[1] = D[i][j-1]
+            tmp[2] = D[i+1][j-1] + mI[i][j]
+            maxtmp = 0
+            for k in range(i+1,j):
+                t = D[i][k]+D[k+1][j]
+                if t > maxtmp:
+                    maxtmp = t
+            tmp[3] = maxtmp
+            D[i][j] = max(tmp)
     return D
             
-    
+# backtrace taken from nussinov.py from course website 
 def BackTrace(g, seq, mI):
     """
     BackTrace - backtrace throug Nussinov matrix
@@ -134,7 +136,6 @@ def BackTrace(g, seq, mI):
                 traceback(i+1, j)
             elif g[i,j] == g[i, j-1]:
                 traceback(i, j-1)
-            #elif g[i,j] == g[i+1, j-1] + delta(seq[i], seq[j]):
             elif g[i,j] == g[i+1, j-1] + mI[i][j]:
                 if abs(i-j) > 2:
                     pairs += [i,j]
@@ -155,28 +156,9 @@ def BackTrace(g, seq, mI):
         M[pairs[i], pairs[i+1]] = 1
 
     return pairs, M
-    
-def delta(si, sj):
-    """
-    delta - score base pairs for Nussinov algorithm
-    si, si - nucleotide letters
-    return
-    d - delta score 1 for complement or G-U wobble pair, otherwise 0
-        1 indicates possible base pairng
-    """
-    
-    nt2int = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'U': 3}
-    nt2comp = {'A': 3, 'C': 2, 'G': 1, 'T': 0, 'U': 0}
 
-    d = 0
-    if (si != '-' and sj != '-'):
-        if nt2int[si] == nt2comp[sj]:
-            d = 1
-        elif (si == 'G' and sj == 'U') or (si == 'U' and sj == 'G'):
-            d = 1
-
-    return d
-    
+# taken from nussinov.py from course website to calculate
+# the structure based on the pairs from the backtrace 
 def StructureFromPairs(pairs, L):
     struct = list('.' * L)
     for i in range(0, len(pairs), 2):
@@ -196,23 +178,22 @@ def Main():
         alignment.append(str(record.seq))
     f.close()
 
+    #get consensus sequence
     con_seq = consensusSeq(alignment)
     print("consensus sequence: " + con_seq)
     
+    # get mutual information matrix
     miMatrix = mutualInformation(alignment)
-    #print("Mutual Information matrix")
-    #print(miMatrix)
-    #m = np.array(miMatrix)
-    D = secondaryStructure(miMatrix)
-    d = np.array(D)
-    #p.set_printoptions(threshold='nan')
-    #print("\n\n\n\nD matrix")
-    #print(D)
+  
+    # get maximum mutual information secondary structure
+    D = maxMI(miMatrix)
     
+    # get pairs using backtrace
     pairs, M = BackTrace(np.array(D), con_seq, miMatrix)
+    print("pairs: ")
     print(pairs)
-    print(M)
-    
+
+    # determine the structure from the pairs
     struct = StructureFromPairs(pairs, len(alignment[0]))
     print("structure: " + struct)
 
