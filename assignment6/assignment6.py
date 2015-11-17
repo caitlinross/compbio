@@ -9,16 +9,18 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-from Bio import SeqIO
+from Bio import Phylo
 
 def Main():
-    # get seqs from fasta file
-    all_seqs = []
-    f = open("test.fa", "rU")
-    for record in SeqIO.parse(f, "fasta"):
-        all_seqs.append(str(record.seq))
-    f.close()
+    # get trees from each file
+    tree1 = Phylo.read("tree1.txt", "newick")
+    tree1.rooted = True
 
+    tree2 = Phylo.read("tree2.txt", "newick")
+    tree2.rooted = True
+
+    tree3 = Phylo.read("tree3.txt", "newick")
+    tree3.rooted = True
 
 if __name__ == '__main__':
     Main()
