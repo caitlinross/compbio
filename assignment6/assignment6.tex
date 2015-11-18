@@ -35,6 +35,7 @@
 \usepackage{hyperref}
 \usepackage{subfig}
 \usepackage{graphicx}
+\usepackage{algpseudocode}
 
 \begin{document}
 \title{Phylogenetic Trees}
@@ -92,10 +93,41 @@
 
 
 \section{Problem Statement}
+The problem here is to implement the Felsenstein algorithm for likelihood and run it on three different phylogentic trees.  The Felsentein algorithm determines the probability of the data given the tree.  
 
 
 \section{Methods}
+Three phylogenetic trees are given for this assignment.  The nodes of the trees show the name of the species with a nucleotide.  All three trees contain the same set of species and nucleotide pairs, but the trees branch differently.  
 
+The Felsenstein algorithm was implemented in order to determine the probability of the data given each tree.  The algorithm is as follows:  \\
+\textbf{Initialization:} $k = 2n - 1$ \\
+\textbf{Recursion:} Compute $P(L_k | a)$ for all $a$ as follows: 
+\begin{algorithmic}
+\If{k is leaf node}
+\State Set $P(L_k | a) = 1$ if $a = x_u^k$, $P(L_k | a) = 0$ if $ a \neq x_u^k$
+\Else
+\State compute $P(L_i | a)$, $P(L_j | a)$ for all $a$ at the daughter nodes $i$, $j$
+\State $P(L_k | a) = \sum_{b,c} P(b|a, t_i)P(L_i|b)P(c|a,t_j)P(L_j|c)$
+\EndIf
+\end{algorithmic}
+\textbf{Termination:} \\
+Likelihood at site u: \\ 
+$P(x_u | T,t) = \sum\limits_{a\in \{A,C,G,T\}} P(L_{2n-1} | a)q_a$
+
+In this algorithm $P(b|a, t_i)$ is from the Jukes-Cantor substitution matrix (defined below), where $a,b \in \{A,C,G,T\}$.  $P(L_k | a)$ is the probability that all leaves below node $k$ given $a \in \{A,C,G,T\}$ at $k$. Also, $q_a = .25, \forall a \in \{A,C,G,T\}$.
+
+The Jukes-Cantor substitution matrix is defined as:
+ \[ S(t) = \left( \begin{array}{cccc}
+r_t & s_t & s_t & s_t \\
+s_t & r_t & s_t & s_t \\
+s_t & s_t & r_t & s_t \\
+s_t & s_t & s_t & r_t \end{array} \right)\]
+where 
+\begin{equation} r_t = \frac{1}{4}(1+3e^{-4\alpha t})\end{equation}
+and
+\begin{equation} s_t = \frac{1}{4}(1-e^{-4\alpha t})\end{equation}
+
+The program written for this work reads in the trees, which are given in Newick format.  It then runs the Felsenstein algorithm on each tree.  For each node of the tree, the program reports $P(L_k |a)$ for each nucleotide.  At the end of the recursion, it reports the final P(data|tree), described in the termination step of Felsenstein's algorithm above.  
 
 %\begin{figure}[!b]
 %	\includegraphics[trim={0 0 2cm 0}, clip,width=3.5in]{rna.png}

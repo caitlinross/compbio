@@ -19,20 +19,22 @@ def felsenstein(n, root):
     if root.is_terminal():
         P_Lk[str(root)[-1]] = 1
         print(root)
-        return P_Lk, str(root)[-1]
+        
     else:
         Phylo.draw_ascii(root) 
         [leftChild, rightChild] = root.clades
         newPlk1 = felsenstein(n-1, leftChild)
-        St1, b1 = jukesCantor(root.distance(leftChild))
+        St1 = jukesCantor(root.distance(leftChild))
         newPlk2 = felsenstein(n-1, rightChild)
-        St2, b2 = jukesCantor(root.distance(rightChild))
+        St2 = jukesCantor(root.distance(rightChild))
         
-        P_Lk["A"] = St1[alphabet[b1]][alphabet["A"]] * newPlk1[b1]
-        
-        return P_Lk, ""
+        for i in range(4):
+            for b in range(4):
+                for c in range(4):
+                    P_Lk[rev_alphabet[i]] += St1[b][i] * newPlk1[rev_alphabet[b]] * St2[c][i] * newPlk2[rev_alphabet[c]] 
+            print(rev_alphabet[i] + ": " + str(P_Lk[rev_alphabet[i]]))
      
-    
+    return P_Lk
     
 def jukesCantor(branchLen):
     alpha = math.pow(10,-9)
@@ -68,8 +70,26 @@ def Main():
     root2 = tree2.clade
     root3 = tree3.clade
     
-    felsenstein(6, root1)
+    print("------------------ Tree 1 ------------------")
+    plk = felsenstein(6, root1)
+    total = 0
+    for k,v in list(plk.items()):
+        total += (v * .25)
+    print("P(data|tree) = " + str(total))
     
+    print("\n\n------------------ Tree 2 ------------------")
+    plk = felsenstein(6, root2)
+    total = 0
+    for k,v in list(plk.items()):
+        total += (v * .25)
+    print("P(data|tree) = " + str(total))
+    
+    print("\n\n------------------ Tree 3 ------------------")
+    plk = felsenstein(6, root3)
+    total = 0
+    for k,v in list(plk.items()):
+        total += (v * .25)
+    print("P(data|tree) = " + str(total))
 
 if __name__ == '__main__':
     Main()
