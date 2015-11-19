@@ -29,9 +29,13 @@ def felsenstein(n, root):
         St2 = jukesCantor(root.distance(rightChild))
         
         for i in range(4):
+            tmp1 = 0
+            tmp2 = 0
             for b in range(4):
-                for c in range(4):
-                    P_Lk[rev_alphabet[i]] += St1[b][i] * newPlk1[rev_alphabet[b]] * St2[c][i] * newPlk2[rev_alphabet[c]] 
+                tmp1 += St1[b][i] * newPlk1[rev_alphabet[b]] 
+            for c in range(4):
+                tmp2 += St2[c][i] * newPlk2[rev_alphabet[c]] 
+            P_Lk[rev_alphabet[i]] = tmp1 * tmp2
             print(rev_alphabet[i] + ": " + str(P_Lk[rev_alphabet[i]]))
      
     return P_Lk
@@ -54,6 +58,17 @@ def Main():
     rev_alphabet = {0: "A", 1: "C", 2: "G", 3: "T"}
     
     # get trees from each file
+    print("------------------ Test 1 ------------------")
+    test = Phylo.read("test.txt", "newick")
+    test.rooted = True
+    plk = felsenstein(6, test.clade)
+    total = 0
+    composition = {'A': 0.2, 'C':0.3, 'G': 0.3, 'T': 0.2}
+    for k,v in list(plk.items()):
+        total += (v * composition[k])
+    print("P(data|tree) = " + str(total))
+    
+
     tree1 = Phylo.read("tree1.txt", "newick")
     tree1.rooted = True
     #Phylo.draw_ascii(tree1)
