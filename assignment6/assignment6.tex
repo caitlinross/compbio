@@ -38,7 +38,7 @@
 \usepackage{algpseudocode}
 
 \begin{document}
-\title{Phylogenetic Trees}
+\title{Phylogenetic Trees and Felsenstein's Algorithm}
 \subtitle{Assignment 6}
 %
 % You need the command \numberofauthors to handle the 'placement
@@ -88,7 +88,7 @@
 \maketitle
 
 \begin{abstract}
-
+This work implements Felsenstein's algorithm for likelihood using the Jukes-Cantor model as the substitution matrix.  The program is run on three trees with the same species but different branch patterns and lengths.  The algorithm determines the probability of the data given the tree for each tree.  Final results are shown for each tree as well as intermediate probabilities at each node and leaf.  
 \end{abstract}
 
 
@@ -178,7 +178,7 @@ probability at node \{'G': 4.493e-07, 'C': 0.000281, 'T': 1.8520202918226461e-10
 probability at node \{'G': 3.232e-10, 'C': 1.950e-07, 'T': 1.209e-11, 'A': 1.741e-08\}\\
 P(data|tree) = 5.319e-08
 
-Tree 2 has the highest probability.
+Tree 2 has the highest probability out of the three trees given.
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
