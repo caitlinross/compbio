@@ -38,7 +38,7 @@
 \usepackage{algpseudocode}
 
 \begin{document}
-\title{Phylogenetic Trees}
+\title{Phylogenetic Trees and Felsenstein's Algorithm}
 \subtitle{Assignment 6}
 %
 % You need the command \numberofauthors to handle the 'placement
@@ -88,7 +88,7 @@
 \maketitle
 
 \begin{abstract}
-
+This work implements Felsenstein's algorithm for likelihood using the Jukes-Cantor model as the substitution matrix.  The program is run on three trees with the same species but different branch patterns and lengths.  The algorithm determines the probability of the data given the tree for each tree.  Final results are shown for each tree as well as intermediate probabilities at each node and leaf.  
 \end{abstract}
 
 
@@ -136,10 +136,49 @@ The program written for this work reads in the trees, which are given in Newick 
 %\end{figure}
 
 \section{Results}
+The results for tree1.txt: \\
+probability at leaf A \{'G': 0, 'C': 0, 'T': 0, 'A': 1\}\\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at leaf G \{'G': 1, 'C': 0, 'T': 0, 'A': 0\}\\
+probability at leaf G \{'G': 1, 'C': 0, 'T': 0, 'A': 0\}\\
+probability at node \{'G': 0.999, 'C': 2.297e-08, 'T': 2.297e-08, 'A': 2.297e-08\}\\
+probability at node \{'G': 0.000171, 'C': 8.375e-05, 'T': 1.436e-08, 'A': 1.436e-08\}\\
+probability at node \{'G': 5.754e-08, 'C': 8.366e-05, 'T': 1.201e-11, 'A': 1.201e-11\}\\
+probability at node \{'G': 2.259e-11, 'C': 8.355e-05, 'T': 1.852e-12, 'A': 1.852e-12\}\\
+probability at node \{'G': 8.731e-12, 'C': 5.787e-08, 'T': 8.717e-12, 'A': 1.255e-08\}\\
+P(data|tree) = 1.761e-08
 
+Results for tree2.txt:\\
+probability at leaf A \{'G': 0, 'C': 0, 'T': 0, 'A': 1\} \\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at leaf G \{'G': 1, 'C': 0, 'T': 0, 'A': 0\}\\
+probability at leaf G \{'G': 1, 'C': 0, 'T': 0, 'A': 0\}\\
+probability at node \{'G': 0.999, 'C': 2.297e-08, 'T': 2.297e-08, 'A': 2.297e-08\}\\
+probability at node \{'G': 0.000534, 'C': 0.000283, 'T': 1.519e-07, 'A': 1.519e-07\}\\
+probability at node \{'G': 3.052e-07, 'C': 0.000282, 'T': 1.258e-10, 'A': 1.258e-10\}\\
+probability at node \{'G': 1.163e-10, 'C': 0.000282, 'T': 6.288e-12, 'A': 6.288e-12\}\\
+probability at node \{'G': 2.951e-11, 'C': 1.954e-07, 'T': 2.943e-11, 'A': 4.239e-08\}\\
+P(data|tree) = 5.947e-08
 
+Results for tree3.txt: \\
+probability at leaf A \{'G': 0, 'C': 0, 'T': 0, 'A': 1\}\\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at node \{'G': 2.058e-07, 'C': 0.997, 'T': 2.058e-07, 'A': 2.058e-07\}\\
+probability at leaf C \{'G': 0, 'C': 1, 'T': 0, 'A': 0\}\\
+probability at leaf G \{'G': 1, 'C': 0, 'T': 0, 'A': 0\}\\
+probability at leaf G \{'G': 1, 'C': 0, 'T': 0, 'A': 0\}\\
+probability at node \{'G': 0.999, 'C': 2.297e-08, 'T': 2.297e-08, 'A': 2.297e-08\}\\
+probability at node \{'G': 0.000534, 'C': 0.000283, 'T': 1.519e-07, 'A': 1.519e-07\}\\
+probability at node \{'G': 4.493e-07, 'C': 0.000281, 'T': 1.8520202918226461e-10, 'A': 1.852e-10\}\\
+probability at node \{'G': 3.232e-10, 'C': 1.950e-07, 'T': 1.209e-11, 'A': 1.741e-08\}\\
+P(data|tree) = 5.319e-08
 
-
+Tree 2 has the highest probability out of the three trees given.
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
