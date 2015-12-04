@@ -88,6 +88,7 @@
 \maketitle
 
 \begin{abstract}
+Here I run a given DNA sequence through nucleotide BLAST.  I report some basic information for the top ten results, as well as some more detailed information for the highest match found with BLAST.  The given DNA sequence is a match for the gene coding sequence for casein kinase 1 in Plasmodium falciparum, a parasite responsible for causing malaria in humans.  
 
 \end{abstract}
 
@@ -96,74 +97,74 @@
 I was given a fasta file with a DNA sequence.  The problem here is to run this sequence through BLAST, report the top 10 results, and do some research on the species the sequence belongs to.
 
 
-\section{Methods and Results}
+\section{Results}
 As my Ross.fasta file contained a DNA sequence, I used nucleotide BLAST to run on the sequence. The top 10 results from BLAST are shown:
 
 \begin{enumerate}
- \item Plasmodium falciparum 3D7 casein kinase 1, PfCK1 (PfCK1) mRNA, complete cds \\
+ \item \textit{Plasmodium falciparum} 3D7 casein kinase 1, PfCK1 (PfCK1) mRNA, complete cds \\
  match length: 1207 \\
  e-value: 0.0 \\
  bit-score: 828 \\
  \% identity: 100\% \\
  strand: Plus/Plus \\
  
- \item Plasmodium falciparum casein kinase 1 (CK1) mRNA, complete cds \\
+ \item \textit{Plasmodium falciparum} casein kinase 1 (CK1) mRNA, complete cds \\
   match length:1297  \\
  e-value: 0.0 \\
  bit-score: 817 \\
  \% identity: 99\%\\
  strand: Plus/Plus \\
  
- \item Plasmodium reichenowi casein kinase 1 (CK1), partial mRNA \\
+ \item \textit{Plasmodium reichenowi} casein kinase 1 (CK1), partial mRNA \\
   match length: 972 \\
  e-value: 0.0 \\
  bit-score: 767 \\
  \% identity: 99\% \\
  strand: Plus/Plus \\
  
- \item Plasmodium berghei strain ANKA casein kinase 1 (PB000530.02.0), partial mRNA \\
+ \item \textit{Plasmodium berghei} strain ANKA casein kinase 1 (PB000530.02.0), partial mRNA \\
   match length: 735 \\
  e-value: 1e-149 \\
  bit-score: 540 \\
  \% identity: 89\% \\
  strand: Plus/Plus \\
  
- \item Plasmodium yoelii yoelii str. 17XNL casein kinase i (PY06011) partial mRNA \\
+ \item \textit{Plasmodium yoelii yoelii} str. 17XNL casein kinase i (PY06011) partial mRNA \\
   match length: 972 \\
  e-value: 5e-148 \\
  bit-score: 534 \\
  \% identity: 89\% \\
  strand: Plus/Plus \\
  
- \item Plasmodium vinckei vinckei CK1/CK1 protein kinase partial mRNA \\
+ \item \textit{Plasmodium vinckei vinckei} CK1/CK1 protein kinase partial mRNA \\
   match length: 972 \\
  e-value: 5e-143 \\
  bit-score: 518 \\
  \% identity: 89\%\\
  strand: Plus/Plus \\
  
- \item Plasmodium berghei strain ANKA hypothetical protein (PB300304.00.0) partial mRNA \\ 
+ \item \textit{Plasmodium berghei} strain ANKA hypothetical protein (PB300304.00.0) partial mRNA \\ 
   match length: 549 \\
  e-value: 9e-81 \\
  bit-score: 311 \\
  \% identity: 90\% \\
  strand: Plus/Plus \\
  
- \item Plasmodium chabaudi chabaudi casein kinase 1 (PC000102.03.0) partial mRNA \\
+ \item \textit{Plasmodium chabaudi chabaudi} casein kinase 1 (PC000102.03.0) partial mRNA \\
   match length: 540 \\
  e-value: 1e-79 \\
  bit-score: 307 \\
  \% identity: 91\% \\
  strand: Plus/Plus \\
  
- \item Plasmodium falciparum 3D7 chromosome 11, complete sequence \\
+ \item \textit{Plasmodium falciparum} 3D7 chromosome 11, complete sequence \\
   match length: 2038337 \\
  e-value: 9e-71 \\
  bit-score: 278 \\
  \% identity: 99\% \\
  strand: Plus/Minus \\
  
- \item Plasmodium yoelii genome assembly PY17X01, chromosome : 9 \\
+ \item \textit{Plasmodium yoelii} genome assembly PY17X01, chromosome : 9 \\
   match length: 1824586 \\
  e-value: 2e-22 \\
  bit-score: 117 \\
@@ -171,18 +172,19 @@ As my Ross.fasta file contained a DNA sequence, I used nucleotide BLAST to run o
  strand: Plus/Plus \\
  
 \end{enumerate}
+BLAST reports that the highest match for the given DNA sequence is ``\textit{Plasmodium falciparum} 3D7 casein kinase 1, PfCK1 (PfCK1) mRNA, complete cds.''  The alignment for this match is shown in Figure 1.  This match reports that the sequence is the coding DNA sequence (CDS) for the casein kinase 1 for the protozoan (unicellular eukaryote) \textit{Plasmodium falciparum}.  Genes are composed of introns and exons.  Introns are spliced out and the remaining exons make up the CDS.  
 
-The highest match shows that the sequence is the CDS for casein kinase for the Protozoan (unicellular eukaryote) Plasmodium falciparum.  Plasmodium falciparum is a parasite that can cause malaria.  
-The casein kinase is an enzyme that regulates signal transduction pathways in eukaryotes.  
+Kinases are enzymes that phophorylate proteins and specifically, the casein kinase 1 is an enzyme that regulates signal transduction pathways in many eukaryotic cells\footnote{\url{https://en.wikipedia.org/wiki/Kinase}}.  Casein kinases appear to be important to activities such as circadian rhythm, DNA repair, and DNA transcription\footnote{\url{https://en.wikipedia.org/wiki/Casein_kinase_1}}.  
 
-a. The sequence identity
-b. The genomic type (gene, CDS, exon, intron etc.)
-c. The function of the sequence. If it is a segment of a larger structure such as a gene,
-report the gene’s function.
-d. The species the sequence was derived from. For the species, report the species name,
-the common name, the species environment and behavior, the species taxonomy, i.e.
-the species genus, species etc. 
+The match is found in the species \textit{Plasmodium falciparum}.  \textit{P. falciparum} is a parasite that is transmitted by mosquitos and causes the most dangerous form of malaria\footnote{\url{https://en.wikipedia.org/wiki/Plasmodium_falciparum}}.  
 
+\begin{figure}[!b]
+	\includegraphics[trim={0 0 2cm 0}, clip,width=3.5in]{alignment-cropped.png}
+	\caption{BLAST alignment for the highest match}
+	\label{fig:hist}
+\end{figure}
+
+  
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
