@@ -88,44 +88,38 @@
 \maketitle
 
 \begin{abstract}
-
+Given a file with 550 data points, I wrote a MATLAB program that calculates p-values and uses the Benjamini and Hochberg method to determine a cutoff point for the p-values to reduce the number of false positives found.  70 data points in the dataset have a p-value less than 0.05, but only 29 data points fall under the FDR cutoff using the Benjamini and Hochberg method.  We describe the program written to find these results, and display histograms and QQ plots of the data and p-values.
 \end{abstract}
 
 
 \section{Problem Statement}
+The problem here is to take a data set, determine p-values of the data and use the Benjamini and Hochberg method to find a cutoff point for the p-values to reduce the number of false positives found.  
 
-\section{Methods}
-The program written for this assignment first reads in the data.txt file provided.  It plots a histogram of the data, shown in Figure 1, as well as a qqplot, shown in Figure 2.  
+\section{Methods and Results}
+The MATLAB program written for this assignment first reads in the data.txt file provided.  It plots a histogram of the data using 20 bins, shown in Figure 1, as well as a QQ plot, shown in Figure 2.  The homework description states that the data comes from two different normal distributions, where one is the standard normal distribution and the other has a different mean and variance.  Figure 1 appears to look similar to a standard normal distribution except that the data is skewed to the right.  The QQ plot compares the two distributions in the data by plotting their quantiles against each other.  Figure 2 shows that a lot of the points in the middle lie on a straight line.  The ends, particularly the right end, deviates from the line, probably because the data is made of a mixture of two different normal distributions.
 
-\section{Results}
-p value at fdr cutoff: $p_{29} = 0.0024 $
+The program then sorts the data values.  Using the standard normal distribution, it calculates the p-values of each data point by 2*cdf(-abs(data)), where cdf is the cumulative distribution function and abs is the absolute value function.  The program then plots a histogram of the p-values, again using 20 bins.  This histogram is shown in Figure 3.  P-values that are under 0.05 have the highest frequency, with the rest of the bins hovering between frequencies of 20-30 occurrences.  There are 70 data points that fall under 0.05, but some of these are likely to be false positives.    
 
-how many p values less than 0.05: 70
+Now the program calculates the False Discovery Rate using the Benjamini and Hochberg method, to determine the significance cutoff for p-values that should be used for this data.  We set the FDR value to 0.05 and rank the p-values $p_i$ such that $p_1 < p_2 < ... < p_n$, where n is the number of data points.  Then we find $r$ such that $p_r < \frac{r}{n}*FDR$.  Finally the program determines which data points fall under the FDR cutoff, which data points have a p-value below 0.05.  The cutoff to be used based on this method is a p-value of 0.002449.  There are 29 data points with p-values less than or equal to this cutoff, although it's expected that approximately 5\% of these values are false positives as well.    
 
-how many p values less than p value calculated at the FDR cutoff: 29
+Finally, all data points are plotted with respect to their p-values.  Data points that fall under the FDR cutoff are plotted as a blue circle, data points that have a p-value below 0.05 but do not fall under the FDR cutoff are plotted with a red 'x', and all other data points are plotted as a green '+'.  
 
 \begin{figure}[t]
 \centering
-   \includegraphics[width=3.75in]{hist.png}
-\caption{Histogram}
+   \includegraphics[width=3.5in]{hist.png}
+\caption{Histogram of the given data values distributed over 20 bins}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-   \includegraphics[width=3.75in]{qq.png}
-\caption{QQ plot}
-\end{figure}
+\includegraphics[width=3.5in]{qq.png}
+\caption{QQ plot of the Data versus a Standard Normal Distribution}
 
-\begin{figure}[t]
-\centering
-   \includegraphics[width=3.75in]{hist-p.png}
-\caption{Histogram}
-\end{figure}
+   \includegraphics[width=3.5in]{hist-p.png}
+\caption{Histogram of the p-values of the data distributed over 20 bins}
 
-\begin{figure}[t]
-\centering
-   \includegraphics[width=3.75in]{all-data.png}
-\caption{All data}
+   \includegraphics[width=3.5in]{all-data.png}
+\caption{All data points plotted with respect to their p-values}
 \end{figure}
 
   
