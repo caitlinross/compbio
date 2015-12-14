@@ -102,19 +102,19 @@ The program then sorts the data values.  Using the standard normal distribution,
 
 Now the program calculates the False Discovery Rate using the Benjamini and Hochberg method, to determine the significance cutoff for p-values that should be used for this data.  We set the FDR value to 0.05 and rank the p-values $p_i$ such that $p_1 < p_2 < ... < p_n$, where n is the number of data points.  Then we find $r$ such that $p_r < \frac{r}{n}*FDR$.  Finally the program determines which data points fall under the FDR cutoff, which data points have a p-value below 0.05.  The cutoff to be used based on this method is a p-value of 0.002449.  There are 29 data points with p-values less than or equal to this cutoff, although it's expected that approximately 5\% of these values are false positives as well.    
 
-Finally, all data points are plotted with respect to their p-values.  Data points that fall under the FDR cutoff are plotted as a blue circle, data points that have a p-value below 0.05 but do not fall under the FDR cutoff are plotted with a red 'x', and all other data points are plotted as a green '+'.  
+Finally, all data points are plotted with respect to their p-values, shown in Figure 4.  Data points that fall under the FDR cutoff are plotted as a blue circle, data points that have a p-value below 0.05 but do not fall under the FDR cutoff are plotted with a red 'x', and all other data points are plotted as a green '+'.  The values that are below the FDR cutoff (blue circle) appear only on the right side of the curve, which makes sense because the histogram in Figure 1 is right-skewed.  These are probably the values from the other normal distribution used in generating the data (i.e. the one that has a different mean and variance from the standard normal distribution).  The points shown with a red 'x' are most likely data generated from the null model.  This shows why all p-values under 0.05 should not be considered significant, because given enough data points, you can get plenty of p-values that fall below 0.05 by chance.  
 
 \begin{figure}[t]
 \centering
    \includegraphics[width=3.5in]{hist.png}
 \caption{Histogram of the given data values distributed over 20 bins}
+
+\includegraphics[width=3.5in]{qq.png}
+\caption{QQ plot of the Data versus a Standard Normal Distribution}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=3.5in]{qq.png}
-\caption{QQ plot of the Data versus a Standard Normal Distribution}
-
    \includegraphics[width=3.5in]{hist-p.png}
 \caption{Histogram of the p-values of the data distributed over 20 bins}
 

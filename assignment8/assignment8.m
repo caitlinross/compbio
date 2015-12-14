@@ -3,6 +3,7 @@
 % CSCI 6971
 % Assignment 8
 
+clear all
 % read data
 vals = textread('data.txt', '%f');
 
@@ -19,9 +20,6 @@ figure(2)
 qqplot(vals)
 saveas(gcf, 'qq.png')
 
-% sort data for cdf
-val_sort = sort(vals);
-
 % calc p values
 pd = makedist('Normal', 0, 1);
 pvals = 2*cdf(pd, -abs(vals));
@@ -37,7 +35,7 @@ saveas(gcf, 'hist-p.png')
 % calculate False Discovery Rate using Benjamini & Hochberg method
 fdr = 0.05;
 [pvals_sort, sortIndex] = sort(pvals);
-vals_sort2 = val_sort(sortIndex);
+vals_sort = vals(sortIndex);
 for i=1:length(pvals_sort)
     newvals(i,1) = length(pvals_sort)*pvals_sort(i,1)*(1/fdr);
 end
@@ -70,16 +68,22 @@ fprintf('number of p-values less than %f is %d\n', p_cutoff, r);
 
 % plot raw data as points
 % indicate which are below FDR and which have p-value below 0.05
+f_i = 1;
+p_i = 1;
+r_i = 1;
 for i=1:length(pvals_sort)
-   if i < r
-       fdr_cut(i, 1) = vals_sort2(i);
-       fdr_cut(i, 2) = pvals_sort(i);
+   if i <= r
+       fdr_cut(f_i, 1) = vals_sort(i);
+       fdr_cut(f_i, 2) = pvals_sort(i);
+       f_i = f_i + 1;
    elseif pvals_sort(i) < 0.05
-       pval_cut(i,1) = vals_sort2(i);
-       pval_cut(i,2) = pvals_sort(i);
+       pval_cut(p_i,1) = vals_sort(i);
+       pval_cut(p_i,2) = pvals_sort(i);
+       p_i = p_i + 1;
    else
-       rest(i,1) = vals_sort2(i);
-       rest(i,2) = pvals_sort(i);
+       rest(r_i,1) = vals_sort(i);
+       rest(r_i,2) = pvals_sort(i);
+       r_i = r_i + 1;
    end
        
 end
